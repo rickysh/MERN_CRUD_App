@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import DocumentForm from './components/DocumentForm'; 
+import DocumentForm from './components/DocumentForm';
+import { ChakraProvider, Heading, Button } from '@chakra-ui/react'
 
 function App() {
   const [documents, setDocuments] = useState([]);
@@ -73,45 +74,49 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <h1>MongoDB collection Documents</h1>
-      <h2>Add New Document:</h2>
-      <DocumentForm
-        mode="add"
-        onSubmit={handleAddDocument}
-      />
-      <table>
-        <thead>
-          <tr>
-            <th>User</th>
-            <th>Password</th>
-            <th>Action</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {documents.map((document, index) => (
-            <tr key={document._id}>
-              <td>{document.user}</td>
-              <td>{document.password}</td>
-              <td>
-                <button onClick={() => handleDeleteDocument(document._id)}>Delete</button>
-                <button onClick={() => handleSelectDocument(document)}>Update</button>
-              </td>
-              <td>
-                {selectedDocument && selectedDocument._id === document._id && (
-                <DocumentForm
-                  mode="update"
-                  documentToUpdate={selectedDocument}
-                  onSubmit={handleUpdateDocument}
-                />
-                )}
-              </td>
+    <ChakraProvider>
+      <div className="App">
+        <Heading size='2xl'>MongoDB collection Documents</Heading>
+        <br></br>
+        <Heading size='lg'>Add New Document:</Heading>
+        <br></br>
+        <DocumentForm
+          mode="add"
+          onSubmit={handleAddDocument}
+        />
+        <table>
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Password</th>
+              <th>Action</th>
+              <th></th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody>
+            {documents.map((document, index) => (
+              <tr key={document._id}>
+                <td>{document.user}</td>
+                <td>{document.password}</td>
+                <td>
+                  <Button colorScheme='red' onClick={() => handleDeleteDocument(document._id)}>Delete</Button>
+                  <Button colorScheme='green' onClick={() => handleSelectDocument(document)}>Update</Button>
+                </td>
+                <td>
+                  {selectedDocument && selectedDocument._id === document._id && (
+                  <DocumentForm
+                    mode="update"
+                    documentToUpdate={selectedDocument}
+                    onSubmit={handleUpdateDocument}
+                  />
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </ChakraProvider>
   );
 }
 

@@ -1,4 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { ChakraProvider, Box, Button, Input, Text } from '@chakra-ui/react'
+import {
+    NumberInput,
+    NumberInputField,
+    NumberInputStepper,
+    NumberIncrementStepper,
+    NumberDecrementStepper,
+  } from '@chakra-ui/react'
 
 function DocumentForm({ mode, documentToUpdate, onSubmit }) {
     const [user, setUser] = useState('');
@@ -21,33 +29,40 @@ function DocumentForm({ mode, documentToUpdate, onSubmit }) {
     };
 
     return (
-        <div>
-            {/* <h2>{mode === 'add' ? 'Add New Document:' : 'Update Document:'}</h2> */}
-            <form onSubmit={handleSubmit}>
-                <div style={{ display: 'inline-block', marginBottom: '10px' }}>
-                    <label htmlFor="user">User: </label>
-                    <input
-                    type="text"
-                    placeholder="user"
-                    value={user}
-                    onChange={(e) => setUser(e.target.value)}
-                    />
-                </div>
-                <div style={{ display: 'inline-block', marginBottom: '10px' }}>
-                    <label htmlFor="password">Password: </label>
-                    <input
-                    type="number"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    />
-                </div>
-                <div style={{ display: 'inline-block' }}>
-                    {/* <button type="submit">{mode === 'add' ? 'Add' : 'Update'}</button> */}
-                    <button type="submit">OK</button>
-                </div>
-            </form>
-        </div>
+        <ChakraProvider>
+            <Box>
+                {/* <h2>{mode === 'add' ? 'Add New Document:' : 'Update Document:'}</h2> */}
+                <form onSubmit={handleSubmit}>
+                    <Box style={{ display: 'inline-block', marginRight: '10px' }}>
+                        <Text htmlFor="user">User: </Text>
+                        <Input
+                            placeholder='user'
+                            value={user}
+                            onChange={(e) => setUser(e.target.value)}
+                        />
+                    </Box>
+                    <Box style={{ display: 'inline-block', marginRight: '10px' }}>
+                        <Text htmlFor="password">Password: </Text>
+                        <NumberInput>
+                            <NumberInputField
+                                placeholder="Password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                            <NumberInputStepper>
+                                <NumberIncrementStepper />
+                                <NumberDecrementStepper />
+                            </NumberInputStepper>
+                        </NumberInput>
+                    </Box>
+                    <Box style={{ display: 'inline-block' }}>
+                        {/* <button type="submit">{mode === 'add' ? 'Add' : 'Update'}</button> */}
+                        {/* <button type="submit">OK</button> */}
+                        <Button type="submit" colorScheme='blue'>OK</Button>
+                    </Box>
+                </form>
+            </Box>
+        </ChakraProvider>
     );
 }
 
