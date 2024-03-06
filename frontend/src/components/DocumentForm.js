@@ -1,21 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-function DocumentForm({ onAddDocument }) {
+function DocumentForm({ mode, documentToUpdate, onSubmit }) {
     const [user, setUser] = useState('');
     const [password, setPassword] = useState('');
 
+    // If in update mode, populate the form fields with the values of the document to update
+    useEffect(() => {
+        if (mode === 'update' && documentToUpdate) {
+            setUser(documentToUpdate.user);
+            setPassword(documentToUpdate.password);
+        }
+    }, [mode, documentToUpdate]);
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        onAddDocument({ user, password });
+        const newDocument = { user, password };
+        onSubmit(newDocument);
         setUser('');
         setPassword('');
     };
 
     return (
         <div>
-            <h2>Add New Document:</h2>
+            {/* <h2>{mode === 'add' ? 'Add New Document:' : 'Update Document:'}</h2> */}
             <form onSubmit={handleSubmit}>
-                <div style={{ marginBottom: '10px' }}>
+                <div style={{ display: 'inline-block', marginBottom: '10px' }}>
                     <label htmlFor="user">User: </label>
                     <input
                     type="text"
@@ -24,8 +33,8 @@ function DocumentForm({ onAddDocument }) {
                     onChange={(e) => setUser(e.target.value)}
                     />
                 </div>
-                <div style={{ marginBottom: '10px' }}>
-                    <label htmlFor="passord">Password: </label>
+                <div style={{ display: 'inline-block', marginBottom: '10px' }}>
+                    <label htmlFor="password">Password: </label>
                     <input
                     type="number"
                     placeholder="Password"
@@ -33,8 +42,9 @@ function DocumentForm({ onAddDocument }) {
                     onChange={(e) => setPassword(e.target.value)}
                     />
                 </div>
-                <div>
-                    <button type="submit">Add</button>
+                <div style={{ display: 'inline-block' }}>
+                    {/* <button type="submit">{mode === 'add' ? 'Add' : 'Update'}</button> */}
+                    <button type="submit">OK</button>
                 </div>
             </form>
         </div>

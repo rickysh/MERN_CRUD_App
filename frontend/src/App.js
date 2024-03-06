@@ -47,18 +47,18 @@ function App() {
     }
   };
 
-  const handleUpdateDocument = async (id) => {
+  const handleUpdateDocument = async (updatedDocument) => {
     try {
       const response = await fetch(`/api/documents/${selectedDocument._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(selectedDocument)
+        body: JSON.stringify(updatedDocument)
       });
       if (response.ok) {
         // Update the documents list with the updated document
-        setDocuments(documents.map(doc => doc._id === selectedDocument._id ? selectedDocument : doc));
+        setDocuments(documents.map(doc => doc._id === selectedDocument._id ? updatedDocument : doc));
         setSelectedDocument(null);
       } else {
         console.error('Failed to update document:', response.statusText);
@@ -75,34 +75,42 @@ function App() {
   return (
     <div className="App">
       <h1>MongoDB collection Documents</h1>
-      <DocumentForm onAddDocument={handleAddDocument} />
-      <ul>
-        {documents.map((document, index) => (
-          <li key={document._id}>
-            <p>
-              <b>User: </b>{document.user}  <b>Password: </b>{document.password}
-              <button style={{ marginLeft: '10px' }} onClick={() => handleDeleteDocument(document._id)}>Delete</button>
-              <button style={{ marginLeft: '10px' }} onClick={() => handleSelectDocument(document)}>Update</button>
-            </p>
-            {selectedDocument && selectedDocument._id === document._id &&(
-              <div>
-                <h2>Update Document:</h2>
-                <input
-                  type="text"
-                  value={selectedDocument.user}
-                  onChange={(e) => setSelectedDocument({ ...selectedDocument, user: e.target.value })}
+      <h2>Add New Document:</h2>
+      <DocumentForm
+        mode="add"
+        onSubmit={handleAddDocument}
+      />
+      <table>
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Password</th>
+            <th>Action</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {documents.map((document, index) => (
+            <tr key={document._id}>
+              <td>{document.user}</td>
+              <td>{document.password}</td>
+              <td>
+                <button onClick={() => handleDeleteDocument(document._id)}>Delete</button>
+                <button onClick={() => handleSelectDocument(document)}>Update</button>
+              </td>
+              <td>
+                {selectedDocument && selectedDocument._id === document._id && (
+                <DocumentForm
+                  mode="update"
+                  documentToUpdate={selectedDocument}
+                  onSubmit={handleUpdateDocument}
                 />
-                <input
-                  type="number"
-                  value={selectedDocument.password}
-                  onChange={(e) => setSelectedDocument({ ...selectedDocument, password: e.target.value })}
-                />
-                <button onClick={handleUpdateDocument}>Save</button>
-              </div>
-            )}
-          </li>
-        ))}
-      </ul>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
